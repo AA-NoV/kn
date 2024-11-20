@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 public class JsonFileManager
 {
-    private const string FilePath = "reafers.json";
+    string FilePath = "reafers.json";
     public void SaveReaders(List<Reader> readers)
     {
         var json = JsonConvert.SerializeObject(readers, Formatting.Indented);

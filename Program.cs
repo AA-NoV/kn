@@ -10,6 +10,8 @@ class Program
 {
     static void Main(string[] args)
     {
+        ReaderManager readerManager = new ReaderManager();
+
         JsonFileManager jsonFileManager = new JsonFileManager();
         List<Reader> readers = jsonFileManager.LoadReaders();
         int nextId = readers.Count > 0 ? readers.Max(r => r.Id) + 1 : 1;
@@ -31,22 +33,44 @@ class Program
             switch (choice)
             {
                 case "1":
-                    Console.Write("Введите имя читателя: ");
-                    string name = Console.ReadLine();
-                    Console.Write("Введите Email читателя: ");
-                    string email = Console.ReadLine();
+                    string name;
+                    while (true)
+                    {
+                        Console.Write("Введите имя читателя: ");
+                        name = Console.ReadLine();
 
-                    if (IsValidEmail(email))
-                    {
-                        Reader newReader = new Reader { Id = nextId++, Name = name, Email = email };
-                        readers.Add(newReader);
-                        jsonFileManager.SaveReaders(readers);
-                        Console.WriteLine($"Читатель добавлен: ID: {newReader.Id}");
+                        if (readerManager.IsValidName(name))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ошибка: Имя может содержать только буквы. Пожалуйста, попробуйте снова.");
+                        }
                     }
-                    else
+
+                    string email;
+                    while (true)
                     {
-                        Console.WriteLine("Некорректный формат email.");
+                        Console.Write("Введите Email читателя: ");
+                        email = Console.ReadLine();
+
+                        if (readerManager.IsValidEmail(email))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ошибка: Некорректный формат email. Пожалуйста, попробуйте снова.");
+                        }
                     }
+
+                    // Добавление нового читателя
+                    Reader newReader = readerManager.AddReader(name, email);
+                    Console.WriteLine($"Читатель добавлен: ID: {newReader.Id}");
+
+                    // Сохранение списка читателей в JSON
+                    readerManager.SaveReadersToJson(jsonFilePath); 
                     break;
 
                 case "2":
@@ -119,11 +143,5 @@ class Program
         }
 
         Console.WriteLine("Вы вышли из программы.");
-    }
-
-    static bool IsValidEmail(string email)
-    {
-        var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-        return emailRegex.IsMatch(email);
     }
 }
