@@ -8,26 +8,29 @@ public class ReaderManager
 {
     private List<Reader> Readers = new List<Reader>();
     private int nextId = 1;
+
     public Reader AddReader(string name, string email)
     {
         Reader newReader = new Reader()
         {
-            Id = nextId.ToString(),
+            Id = nextId++, 
             Name = name,
             Email = email
         };
         Readers.Add(newReader);
-        nextId++;
         return newReader;
     }
-    public void RemoveReader(string readerId)
+
+    public void RemoveReader(int readerId)
     {
-        Readers.RemoveAll(r => r.Id == readerId);
+        Readers.RemoveAll(r => r.Id == readerId); 
     }
-    public Reader GetReader(string readerId)
+
+    public Reader GetReader(int readerId) 
     {
-        return Readers.Find(r => r.Id == readerId);
+        return Readers.Find(r => r.Id == readerId); 
     }
+
     public List<Reader> GetAllReaders()
     {
         return Readers;

@@ -10,7 +10,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        ReaderManager readerManager = new ReaderManager();
+        JsonFileManager jsonFileManager = new JsonFileManager();
+        List<Reader> readers = jsonFileManager.LoadReaders();
+        int nextId = readers.Count > 0 ? readers.Max(r => r.Id) + 1 : 1;
+
         bool running = true;
 
         while (running)
@@ -23,55 +26,78 @@ class Program
             Console.WriteLine("5. Выход");
             Console.WriteLine("Ваш выбор:");
 
-            string choise = Console.ReadLine();
+            string choice = Console.ReadLine();
 
-            switch (choise)
+            switch (choice)
             {
                 case "1":
-                    Console.Write("Введите имя читателя:");
+                    Console.Write("Введите имя читателя: ");
                     string name = Console.ReadLine();
-                    Console.Write("Введите Email читателя:");
+                    Console.Write("Введите Email читателя: ");
                     string email = Console.ReadLine();
 
                     if (IsValidEmail(email))
                     {
-                        Reader newReader = readerManager.AddReader(name, email);
+                        Reader newReader = new Reader { Id = nextId++, Name = name, Email = email };
+                        readers.Add(newReader);
+                        jsonFileManager.SaveReaders(readers);
                         Console.WriteLine($"Читатель добавлен: ID: {newReader.Id}");
                     }
                     else
                     {
                         Console.WriteLine("Некорректный формат email.");
                     }
-
                     break;
 
                 case "2":
-                    Console.Write("Введите ID читателя для удаления:");
-                    string readerIdToRemove = Console.ReadLine();
-                    readerManager.RemoveReader(readerIdToRemove);
-                    Console.WriteLine($"Читатель с ID {readerIdToRemove} удален");
-                    break;
-
-                case "3":
-                    Console.Write("Введите ID читателя для просмотра:");
-                    string readerIdToView = Console.ReadLine();
-                    Reader foundReader = readerManager.GetReader(readerIdToView);
-                    if (foundReader != null)
+                    Console.Write("Введите ID читателя для удаления: ");
+                    string readerIdToRemoveStr = Console.ReadLine();
+                    if (int.TryParse(readerIdToRemoveStr, out int readerIdToRemove))
                     {
-                        Console.WriteLine($"ID: {foundReader.Id}, Имя: {foundReader.Name}, Email: {foundReader.Email}");
+                        var readerToRemove = readers.FirstOrDefault(r => r.Id == readerIdToRemove);
+                        if (readerToRemove != null)
+                        {
+                            readers.Remove(readerToRemove);
+                            jsonFileManager.SaveReaders(readers);
+                            Console.WriteLine($"Читатель с ID {readerIdToRemove} удален.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Читатель не найден.");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Читатель не найден");
+                        Console.WriteLine("Некорректный ID.");
+                    }
+                    break;
+
+                case "3":
+                    Console.Write("Введите ID читателя для просмотра: ");
+                    string readerIdToViewStr = Console.ReadLine();
+                    if (int.TryParse(readerIdToViewStr, out int readerIdToView))
+                    {
+                        var foundReader = readers.FirstOrDefault(r => r.Id == readerIdToView);
+                        if (foundReader != null)
+                        {
+                            Console.WriteLine($"ID: {foundReader.Id}, Имя: {foundReader.Name}, Email: {foundReader.Email}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Читатель не найден.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Некорректный ID.");
                     }
                     break;
 
                 case "4":
-                    var allReaders = readerManager.GetAllReaders();
-                    if (allReaders.Count > 0)
+                    if (readers.Count > 0)
                     {
                         Console.WriteLine("Список всех читателей:");
-                        foreach (var reader in allReaders)
+                        foreach (var reader in readers)
                         {
                             Console.WriteLine($"ID: {reader.Id}, Имя: {reader.Name}, Email: {reader.Email}");
                         }
@@ -80,15 +106,21 @@ class Program
                     {
                         Console.WriteLine("Нет зарегистрированных читателей.");
                     }
-                        break;
+                    break;
 
-                        default:
-                            Console.WriteLine("Некорректный выбор, попробуйте снова.");
-                        break;
-                    }
+                case "5":
+                    running = false;
+                    break;
+
+                default:
+                    Console.WriteLine("Некорректный выбор, попробуйте снова.");
+                    break;
             }
-            Console.WriteLine("Вы вышли из программы.");
         }
+
+        Console.WriteLine("Вы вышли из программы.");
+    }
+
     static bool IsValidEmail(string email)
     {
         var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
