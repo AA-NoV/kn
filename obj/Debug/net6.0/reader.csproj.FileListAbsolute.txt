@@ -1,0 +1,14 @@
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.AssemblyInfoInputs.cache
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.AssemblyInfo.cs
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.csproj.CoreCompileInputs.cache
+C:\Users\S111\source\repos\reader\bin\Debug\net6.0\reader.exe
+C:\Users\S111\source\repos\reader\bin\Debug\net6.0\reader.deps.json
+C:\Users\S111\source\repos\reader\bin\Debug\net6.0\reader.runtimeconfig.json
+C:\Users\S111\source\repos\reader\bin\Debug\net6.0\reader.dll
+C:\Users\S111\source\repos\reader\bin\Debug\net6.0\reader.pdb
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.dll
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\refint\reader.dll
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.pdb
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\reader.genruntimeconfig.cache
+C:\Users\S111\source\repos\reader\obj\Debug\net6.0\ref\reader.dll
